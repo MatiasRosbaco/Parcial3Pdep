@@ -1,3 +1,5 @@
+import Suenios.*
+
 class Personas {
 	var edad
 	const carrerasAEstudiar = #{}
@@ -7,7 +9,16 @@ class Personas {
 	const hijos = #{}
 	var tieneTrabajo = false
 	var felicidonios
-	const suenios = #{}
+	const sueniosPendientes = []
+	const sueniosCompletadas = []
+	const tipoPersona
+	
+	
+	method cumplir(suenio){
+		suenio.cumplir(self)
+		sueniosCompletadas.add(suenio)
+		sueniosPendientes.remove(suenio)
+	}
 	
 	method quiereEstudiarCarrera(carrera){
 		return carrerasAEstudiar.contains(carrera)
@@ -39,76 +50,43 @@ class Personas {
 	method tenerHijo(hijo){
 		hijos.add(hijo)
 	}
-}
-
-
-class Suenios{
-	var cumplido = false
-	var felicidonios = 0 
-	method cumplir(persona){
-		self.validar(persona)
-		self.realizar(persona)
-		self.cumplir()
-		persona.sumarFelicidonios(felicidonios)
+	
+	method sumarFelicidonios(cantidad){
+		felicidonios += cantidad
 	}
 	
-	method cumplir(){
-		cumplido = true
+	method cumplirSuenio(){
+		const suenioElegido = tipoPersona.elegirSuenio(sueniosPendientes)
+		self.cumplir(suenioElegido)
+	}
+
+	method esFeliz(){
+		return felicidonios > self.cuantaFelicidadMeFalta()
 	}
 	
-	method validar(persona)
-	method realizar(persona)
-	
-}
-
-
-class Recibirse inherits Suenios{
-	const carrera
-	override method validar(persona){
-		if(!persona.quiereEstudiarCarrera(carrera)){
-			throw new Exception(message = "no quiere estudiar esa carrera")	
-		}
-		if(persona.yaEstudioLaCarrera(carrera)){
-			throw new Exception(message = "ya estudio la carrera reiii")
-		}
-	}
-	override method realizar(persona){
-		persona.recibirse(carrera)
+	method cuantaFelicidadMeFalta(){
+		return sueniosPendientes.sum{suenio => suenio.felicidonios()}
 	}
 }
 
-class Trabajo inherits Suenios{
-	const sueldo
-	override method validar(persona){
-		if(sueldo < persona.cuantaPlataQuiere()){
-			throw new Exception(message ="Ni ahi trabajo por 2 mangos")
-		}
-	}
-	override method realizar(persona){
-		persona.dejarDeSerPlanero()		
+object realista{
+	
+	method elegirSuenio(suenios){
+		return suenios.max{suenio => suenio.felicidonios()}
 	}
 }
 
-class Viajar inherits Suenios{
-	const lugar
-	override method validar(persona){
-		
-	}
+object alocado{
 	
-	override method realizar(persona){
-		persona.conocer(lugar)
+	method elegirSuenio(suenios){
+		return suenios.anyOne()
 	}
 }
 
-class AdoptarHijo inherits Suenios{
-	const hijo = new Personas(edad = 0, plata = 0, felicidonios = 0) //me parecio re cute esto por alguna razon
-	override method validar(persona){
-		if(!persona.tieneHijo()){
-			throw new Exception(message = "vas a sobrepoblar el planeta, abstenete porfavor")
-		}
+object obsesivo{
+	
+	method elegirSuenio(suenios){
+		return suenios.first()	
 	}
 	
-	override method realizar(persona){
-		persona.tenerHijo(hijo)	
-	}
 }
