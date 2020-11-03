@@ -10,7 +10,7 @@ class Suenios{
 		persona.sumarFelicidonios(felicidonios)
 	}
 	
-	method suenioAmbisioco(){
+	method suenioAmbicioso(){
 		return	felicidonios > 100
 	}
 	

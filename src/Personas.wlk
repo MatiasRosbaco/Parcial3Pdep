@@ -67,6 +67,15 @@ class Personas {
 	method cuantaFelicidadMeFalta(){
 		return sueniosPendientes.sum{suenio => suenio.felicidonios()}
 	}
+	
+	method esAmbicioso(){
+		const suenios = sueniosPendientes + sueniosCompletadas
+		return  self.cantidadSueniosAmbiciosos(suenios) > 3
+	}
+	method cantidadSueniosAmbiciosos(suenios){
+		return suenios.filter{suenio => suenio.suenioAmbicioso()}.size()
+	}
+
 }
 
 object realista{
